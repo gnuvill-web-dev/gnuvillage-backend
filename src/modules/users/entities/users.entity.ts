@@ -2,12 +2,9 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('User')
 export class UserEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ length: 20 })
   id: string;
 
-  @Column({ length: 30 })
-  name: string;
-
-  @Column({ length: 30 })
+  @Column({ length: 60 })
   password: string;
 }
