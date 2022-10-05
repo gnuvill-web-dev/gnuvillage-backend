@@ -31,6 +31,7 @@ export class UsersController {
   async getUserProfile(
     @Param('userId') userId: string,
   ): Promise<ProfileEntity> {
+    /// promise 비동기  ,, callBack
     return this.usersService.getUserProfile(userId);
   }
 
