@@ -31,4 +31,12 @@ export class RoadmapService {
 
     }
 
+    async getRoadMap(roadmapName:string)
+    {
+        const roadmap = await this.roadmapRepository.findOneBy({rm_name:roadmapName}) ;
+        return roadmap
+    }
+
+
+
 }
