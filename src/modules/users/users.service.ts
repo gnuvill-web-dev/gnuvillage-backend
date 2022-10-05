@@ -47,14 +47,14 @@ export class UsersService {
     await queryRunner.startTransaction();
 
     try {
-      await queryRunner.manager.save(userEntity); //
-      await queryRunner.manager.save(profileEntity); // save
+      await queryRunner.manager.save(userEntity);
+      await queryRunner.manager.save(profileEntity);
 
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
     } finally {
-      await queryRunner.release(); // connect Release
+      await queryRunner.release();
     }
 
     return userEntity;
