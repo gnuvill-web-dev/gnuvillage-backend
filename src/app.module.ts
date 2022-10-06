@@ -7,7 +7,6 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
 import { AuthModule } from './common/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dataSource from './config/ormconfig';
-
 @Module({
   imports: [
     UsersModule,
