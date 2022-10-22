@@ -30,8 +30,8 @@ export class UsersService {
 
     const userEntity = new UserEntity();
     userEntity.id = dto.id;
-    const salt = Bcrypt.genSaltSync();
-    const bcryptPW = Bcrypt.hashSync(dto.password, salt);
+    const salt = Bcrypt.genSaltSync(); //salt is random varale
+    const bcryptPW = Bcrypt.hashSync(dto.password, salt); // same pw salt 를 놈
     userEntity.password = bcryptPW;
 
     const profileEntity = new ProfileEntity();
@@ -94,7 +94,7 @@ export class UsersService {
 
   async getAllUserProfiles(dto: SearchProfilesDto) {
     const take = dto.getLimit();
-    const skip = dto.getOffset();
+    const skip = dto.getOffset(); // skip
     const pageSize = dto.pageSize;
 
     delete dto.pageNo;
@@ -106,7 +106,7 @@ export class UsersService {
     }
 
     const totalCount = await this.profilesRepository.count({
-      where: { ...query },
+      where: { ...query }, // spread 연산자 ,,,! gocp
     });
     const list = await this.profilesRepository.find({
       take: take,
@@ -118,11 +118,12 @@ export class UsersService {
   }
 
   async editUserProfile(userId: string, dto: EditProfileDto) {
-    const updateResult = await this.profilesRepository.update({ userId }, dto);
+    const updateResult = await this.profilesRepository.update({ userId }, dto); // dto 랑 비교
     return updateResult;
   }
 
   async editUser(userId: string, dto: EditUserDto) {
+    // edit create
     const salt = Bcrypt.genSaltSync();
     const bcryptPW = Bcrypt.hashSync(dto.password, salt);
     const updateResult = await this.usersRepository.update(
