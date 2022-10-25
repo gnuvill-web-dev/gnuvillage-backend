@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { Page, PageRequest } from 'src/common/utils/page-request';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +18,9 @@ import { ProfileEntity } from './entities/profiles.entity';
 import { UserEntity } from './entities/users.entity';
 import { UsersService } from './users.service';
 import { UpdateResult, DeleteResult } from 'typeorm';
+import { AuthGuard } from 'src/common/guard/auth.guard';
+import { GuardTypes } from 'src/common/decorator/guard-type.decorator';
+import { GuardType } from 'src/common/utils/enum';
 
 @Controller('users')
 export class UsersController {
@@ -27,6 +31,7 @@ export class UsersController {
     return this.usersService.createUser(dto);
   }
 
+  @GuardTypes(GuardType.OwnRes)
   @Get('p/:userId')
   async getUserProfile(
     @Param('userId') userId: string,
@@ -43,7 +48,7 @@ export class UsersController {
 
   //TODO: jwt인증을 구현했으면 Guard를 이용하여 인가를 구현하기
   @Get(':userId')
-  async getUser(@Param('id') userId: string): Promise<UserEntity> {
+  async getUser(@Param('userId') userId: string): Promise<UserEntity> {
     return this.usersService.getUser(userId);
   }
 

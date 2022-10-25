@@ -7,6 +7,11 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
 import { AuthModule } from './common/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dataSource from './config/ormconfig';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './common/guard/auth.guard';
+import { GroupsService } from './modules/groups/groups.service';
+import { GroupEntity } from './modules/groups/entities/groups.entity';
+import { AssignedGroupEntity } from './modules/groups/entities/assigned-groups.entity';
 
 @Module({
   imports: [
@@ -17,8 +22,15 @@ import dataSource from './config/ormconfig';
     SubscriptionsModule,
     AuthModule,
     TypeOrmModule.forRoot(dataSource.options),
+    TypeOrmModule.forFeature([GroupEntity, AssignedGroupEntity]),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    GroupsService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}

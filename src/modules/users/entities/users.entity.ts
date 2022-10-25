@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { AssignedGroupEntity } from 'src/modules/groups/entities/assigned-groups.entity';
+import { Column, Entity, PrimaryColumn, OneToMany } from 'typeorm';
 
 @Entity('User')
 export class UserEntity {
