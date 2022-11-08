@@ -16,7 +16,7 @@ export class PostsService {
   constructor(
     @InjectRepository(PostEntity)
     private postsRepository: Repository<PostEntity>,
-    @InjectRepository(PostEntity)
+    @InjectRepository(ReplyEntity)
     private repliesRepository: Repository<ReplyEntity>,
   ) {}
 
@@ -34,7 +34,7 @@ export class PostsService {
     post.category = dto.category;
     post.admin = admin;
 
-    return this.postsRepository.save(post);
+    return await this.postsRepository.save(post);
   }
 
   async createReply(
@@ -49,7 +49,7 @@ export class PostsService {
     if (groupId !== undefined) reply.groupId = groupId;
     reply.content = dto.content;
 
-    return this.repliesRepository.save(reply);
+    return await this.repliesRepository.save(reply);
   }
 
   async getAllPosts(dto: SearchPostsDto, groupId?: number) {
@@ -120,9 +120,12 @@ export class PostsService {
   async getPost(postId: number, groupId?: number) {
     let post;
     if (groupId === undefined) {
-      post = this.postsRepository.findOneBy({ id: postId, groupId: IsNull() });
+      post = await this.postsRepository.findOneBy({
+        id: postId,
+        groupId: IsNull(),
+      });
     } else {
-      post = this.postsRepository.findOneBy({
+      post = await this.postsRepository.findOneBy({
         id: postId,
         groupId,
       });
@@ -133,13 +136,13 @@ export class PostsService {
   async getReply(replyId: number, postId: number, groupId?: number) {
     let reply;
     if (groupId === undefined) {
-      reply = this.repliesRepository.findOneBy({
+      reply = await this.repliesRepository.findOneBy({
         id: replyId,
         postId,
         groupId: IsNull(),
       });
     } else {
-      reply = this.repliesRepository.findOneBy({
+      reply = await this.repliesRepository.findOneBy({
         id: replyId,
         postId,
         groupId,
@@ -154,17 +157,14 @@ export class PostsService {
     userId: string,
     groupId?: number,
   ) {
-    let updateResult;
-    if (groupId === undefined)
-      updateResult = this.postsRepository.update(
-        { id: postId, userId, groupId: IsNull() },
-        dto,
-      );
-    else
-      updateResult = this.postsRepository.update(
-        { id: postId, userId, groupId },
-        dto,
-      );
+    let query: any = {};
+
+    query.id = postId;
+    if (userId !== undefined) query.userId = userId;
+    if (groupId === undefined) query.groupId = IsNull();
+    else query.groupId = groupId;
+
+    const updateResult = await this.postsRepository.update(query, dto);
     return updateResult;
   }
 
@@ -175,34 +175,27 @@ export class PostsService {
     userId: string,
     groupId?: number,
   ) {
-    let updateResult;
-    if (groupId === undefined)
-      updateResult = this.repliesRepository.update(
-        { id: replyId, postId, userId, groupId: IsNull() },
-        dto,
-      );
-    else
-      updateResult = this.repliesRepository.update(
-        { id: replyId, postId, userId, groupId },
-        dto,
-      );
+    let query: any = {};
+
+    query.id = replyId;
+    query.postId = postId;
+    if (userId !== undefined) query.userId = userId;
+    if (groupId === undefined) query.groupId = IsNull();
+    else query.groupId = groupId;
+
+    const updateResult = await this.repliesRepository.update(query, dto);
     return updateResult;
   }
 
   async deletePost(postId: number, userId: string, groupId?: number) {
-    let deleteResult;
-    if (groupId === undefined)
-      deleteResult = this.postsRepository.delete({
-        id: postId,
-        userId,
-        groupId: IsNull(),
-      });
-    else
-      deleteResult = this.postsRepository.delete({
-        id: postId,
-        userId,
-        groupId,
-      });
+    let query: any = {};
+
+    query.id = postId;
+    if (userId !== undefined) query.userId = userId;
+    if (groupId === undefined) query.groupId = IsNull();
+    else query.groupId = groupId;
+
+    const deleteResult = await this.postsRepository.delete(query);
     return deleteResult;
   }
 
@@ -212,21 +205,15 @@ export class PostsService {
     userId: string,
     groupId?: number,
   ) {
-    let deleteResult;
-    if (groupId === undefined)
-      deleteResult = this.repliesRepository.delete({
-        id: replyId,
-        postId,
-        userId,
-        groupId: IsNull(),
-      });
-    else
-      deleteResult = this.repliesRepository.delete({
-        id: replyId,
-        postId,
-        userId,
-        groupId,
-      });
+    let query: any = {};
+
+    query.id = replyId;
+    query.postId = postId;
+    if (userId !== undefined) query.userId = userId;
+    if (groupId === undefined) query.groupId = IsNull();
+    else query.groupId = groupId;
+
+    const deleteResult = await this.repliesRepository.delete(query);
     return deleteResult;
   }
 }

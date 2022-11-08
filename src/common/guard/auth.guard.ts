@@ -89,6 +89,8 @@ export class AuthGuard implements CanActivate {
         groupId,
       });
     if (assignment === undefined || assignment.admin === false) return false;
+
+    request.headers['user-id'] = undefined; //group admin인 경우 필요없기 때문에.
     return true;
   }
 
@@ -96,6 +98,9 @@ export class AuthGuard implements CanActivate {
     try {
       const jwtString = request.headers.authorization.split('Bearer ')[1];
       const payload = jwt.verify(jwtString, process.env.AUTH_JWT_KEY);
+      if (payload.userId === 'superuser')
+        request.headers['user-id'] = undefined;
+      else request.headers['user-id'] = payload.userId;
       return payload;
     } catch (e) {
       throw new UnauthorizedException();

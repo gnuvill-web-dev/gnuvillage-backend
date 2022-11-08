@@ -12,6 +12,7 @@ import {
 import { GuardTypes } from 'src/common/decorator/guard-type.decorator';
 import { GuardType } from 'src/common/utils/enum';
 import { CreatePostDto } from './dto/create-post.dto';
+import { CreateReplyDto } from './dto/create-reply.dto';
 import { EditPostDto } from './dto/edit-post.dto';
 import { EditReplyDto } from './dto/edit-reply.dto';
 import { SearchPostsDto } from './dto/search-posts.dto';
@@ -44,7 +45,7 @@ export class PostsController {
   @Post('g/:groupId/:postId/r')
   @GuardTypes(GuardType.GroupRes)
   async createGroupPostReply(
-    @Body() dto: CreatePostDto,
+    @Body() dto: CreateReplyDto,
     @Headers('user-id') userId: string,
     @Param('postId') postId: number,
     @Param('groupId') groupId: number,
@@ -65,7 +66,7 @@ export class PostsController {
   @Post(':postId/r')
   @GuardTypes(GuardType.MemberRes)
   async createOpenPostReply(
-    @Body() dto: CreatePostDto,
+    @Body() dto: CreateReplyDto,
     @Headers('user-id') userId: string,
     @Param('postId') postId: number,
   ) {
