@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { Page, PageRequest } from 'src/common/utils/page-request';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -31,7 +30,7 @@ export class UsersController {
     return this.usersService.createUser(dto);
   }
 
-  @GuardTypes(GuardType.OwnRes)
+  @GuardTypes(GuardType.MemberRes)
   @Get('p/:userId')
   async getUserProfile(
     @Param('userId') userId: string,
@@ -39,6 +38,7 @@ export class UsersController {
     return this.usersService.getUserProfile(userId);
   }
 
+  @GuardTypes(GuardType.MemberRes)
   @Get('p')
   async getAllUserProfiles(
     @Query() dto: SearchProfilesDto,
@@ -46,18 +46,19 @@ export class UsersController {
     return this.usersService.getAllUserProfiles(dto);
   }
 
-  //TODO: jwt인증을 구현했으면 Guard를 이용하여 인가를 구현하기
+  @GuardTypes(GuardType.SuperUser)
   @Get(':userId')
   async getUser(@Param('userId') userId: string): Promise<UserEntity> {
     return this.usersService.getUser(userId);
   }
 
-  //TODO: jwt인증을 구현했으면 Guard를 이용하여 인가를 구현하기. 관리자만 접근할 수 있도록.
+  @GuardTypes(GuardType.SuperUser)
   @Get()
   async getAllUsers(@Query() dto: PageRequest): Promise<Page<UserEntity>> {
     return this.usersService.getAllUsers(dto);
   }
 
+  @GuardTypes(GuardType.OwnRes)
   @Patch('p/:userId')
   async editUserProfile(
     @Param('userId') userId: string,
@@ -66,6 +67,7 @@ export class UsersController {
     return this.usersService.editUserProfile(userId, dto);
   }
 
+  @GuardTypes(GuardType.OwnRes)
   @Patch(':userId')
   async editUser(
     @Param('userId') userId: string,
@@ -74,6 +76,7 @@ export class UsersController {
     return this.usersService.editUser(userId, dto);
   }
 
+  @GuardTypes(GuardType.SuperUser)
   @Delete(':userId')
   async deleteUser(@Param('userId') userId: string): Promise<DeleteResult> {
     return this.usersService.deleteUser(userId);
