@@ -36,8 +36,10 @@ export class AuthGuard implements CanActivate {
     if (guardTypes.length > 0) {
       //guardTypes 중에 적어도 하나 통과해야 접근이 가능하다.
       for (let i = 0; i < guardTypes.length; i++) {
+        //로그인 상태를 요구하는 권한에 접근하는 경우(이미 getJwtPayload 통해 토큰 검증 완료)
+        if (guardTypes[i] === GuardType.MemberRes) isValid ||= true;
         //사용자 본인의 권한에 접근하는 경우
-        if (guardTypes[i] === GuardType.OwnRes)
+        else if (guardTypes[i] === GuardType.OwnRes)
           isValid ||= await this.validateOwnResRequest(jwtPayload, request);
         //특정 그룹의 권한에 접근하는 경우
         else if (guardTypes[i] === GuardType.GroupRes)
@@ -50,8 +52,7 @@ export class AuthGuard implements CanActivate {
           );
       }
     }
-    if (isValid) return true;
-    else throw new UnauthorizedException();
+    return isValid;
   }
 
   private async validateOwnResRequest(jwtPayload: any, request: any) {
@@ -67,6 +68,7 @@ export class AuthGuard implements CanActivate {
     let groupId = request.params.groupId;
     //파라미터에 없으면 헤더에서 groupId를 찾는다.
     if (groupId === undefined) groupId = request.headers['group-id'];
+
     const assignment =
       await this.groupsService.assignedGroupsRepository.findOneBy({
         userId,
