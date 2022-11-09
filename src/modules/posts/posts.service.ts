@@ -160,7 +160,7 @@ export class PostsService {
     let query: any = {};
 
     query.id = postId;
-    if (userId !== undefined) query.userId = userId;
+    if (userId !== 'superuser') query.userId = userId;
     if (groupId === undefined) query.groupId = IsNull();
     else query.groupId = groupId;
 
@@ -179,7 +179,7 @@ export class PostsService {
 
     query.id = replyId;
     query.postId = postId;
-    if (userId !== undefined) query.userId = userId;
+    if (userId !== 'superuser') query.userId = userId;
     if (groupId === undefined) query.groupId = IsNull();
     else query.groupId = groupId;
 
@@ -191,7 +191,7 @@ export class PostsService {
     let query: any = {};
 
     query.id = postId;
-    if (userId !== undefined) query.userId = userId;
+    if (userId !== 'superuser') query.userId = userId;
     if (groupId === undefined) query.groupId = IsNull();
     else query.groupId = groupId;
 
@@ -209,7 +209,7 @@ export class PostsService {
 
     query.id = replyId;
     query.postId = postId;
-    if (userId !== undefined) query.userId = userId;
+    if (userId !== 'superuser') query.userId = userId;
     if (groupId === undefined) query.groupId = IsNull();
     else query.groupId = groupId;
 

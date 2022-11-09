@@ -89,8 +89,6 @@ export class AuthGuard implements CanActivate {
         groupId,
       });
     if (assignment === undefined || assignment.admin === false) return false;
-
-    request.headers['user-id'] = undefined; //group admin인 경우 필요없기 때문에.
     return true;
   }
 
