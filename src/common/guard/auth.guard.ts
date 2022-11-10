@@ -9,6 +9,14 @@ import * as jwt from 'jsonwebtoken';
 import { GuardType } from '../utils/enum';
 import { GroupsService } from 'src/modules/groups/groups.service';
 
+/*
+    전역 가드로써 동작하며 'guardTypes' 키의 메타데이터가 주입된 클래스, 메소드의 경우에만 검증이 진행된다.
+    'guardTypes'에는 우선 순위가 있으며 우선 순위대로 메타데이터에서 요구하는 검증을 진행한다.
+    여러 검증들 중에 하나만 통과하면 전체 가드 과정을 통과한 것으로 한다.
+    request.headers['auth-id']에는 jwt 속 아이디, 즉 요청자의 아이디를 담는다.
+    request.params.userId에는 요청하는 자원의 소유자 아이디를 담는다.
+*/
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
