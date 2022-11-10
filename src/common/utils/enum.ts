@@ -1,7 +1,7 @@
 export enum GuardType {
-  MemberRes,
-  OwnRes,
-  GroupRes,
-  GroupAdminRes,
   SuperUser,
+  GroupAdminRes,
+  GroupRes,
+  OwnRes,
+  MemberRes,
 }

@@ -27,50 +27,50 @@ export class PostsController {
   @GuardTypes(GuardType.MemberRes)
   async createOpenPost(
     @Body() dto: CreatePostDto,
-    @Headers('user-id') userId: string,
+    @Headers('auth-id') authId: string,
   ) {
-    return await this.postsService.createPost(dto, userId);
+    return await this.postsService.createPost(dto, authId);
   }
 
   @Post('g/:groupId')
   @GuardTypes(GuardType.GroupRes)
   async createGroupPost(
     @Body() dto: CreatePostDto,
-    @Headers('user-id') userId: string,
+    @Headers('auth-id') authId: string,
     @Param('groupId') groupId: number,
   ) {
-    return await this.postsService.createPost(dto, userId, groupId);
+    return await this.postsService.createPost(dto, authId, groupId);
   }
 
   @Post('g/:groupId/:postId/r')
   @GuardTypes(GuardType.GroupRes)
   async createGroupPostReply(
     @Body() dto: CreateReplyDto,
-    @Headers('user-id') userId: string,
+    @Headers('auth-id') authId: string,
     @Param('postId') postId: number,
     @Param('groupId') groupId: number,
   ) {
-    return await this.postsService.createReply(dto, userId, postId, groupId);
+    return await this.postsService.createReply(dto, authId, postId, groupId);
   }
 
   @Post('ga/:groupId')
   @GuardTypes(GuardType.GroupAdminRes)
   async createGroupAdminPost(
     @Body() dto: CreatePostDto,
-    @Headers('user-id') userId: string,
+    @Headers('auth-id') authId: string,
     @Param('groupId') groupId: number,
   ) {
-    return await this.postsService.createPost(dto, userId, groupId, true);
+    return await this.postsService.createPost(dto, authId, groupId, true);
   }
 
   @Post(':postId/r')
   @GuardTypes(GuardType.MemberRes)
   async createOpenPostReply(
     @Body() dto: CreateReplyDto,
-    @Headers('user-id') userId: string,
+    @Headers('auth-id') authId: string,
     @Param('postId') postId: number,
   ) {
-    return await this.postsService.createReply(dto, userId, postId);
+    return await this.postsService.createReply(dto, authId, postId);
   }
 
   @Get('')
@@ -144,7 +144,7 @@ export class PostsController {
   @Patch('g/:groupId/:postId')
   async editGroupPost(
     @Body() dto: EditPostDto,
-    @Headers('user-id') userId: string,
+    @Param('userId') userId: string,
     @Param('groupId') groupId: number,
     @Param('postId') postId: number,
   ) {
@@ -155,7 +155,7 @@ export class PostsController {
   @Patch('g/:groupId/:postId/r/:replyId')
   async editGroupPostReply(
     @Body() dto: EditReplyDto,
-    @Headers('user-id') userId: string,
+    @Param('userId') userId: string,
     @Param('replyId') replyId: number,
     @Param('groupId') groupId: number,
     @Param('postId') postId: number,
@@ -173,7 +173,7 @@ export class PostsController {
   @Patch(':postId')
   async editOpenPost(
     @Body() dto: EditPostDto,
-    @Headers('user-id') userId: string,
+    @Param('userId') userId: string,
     @Param('postId') postId: number,
   ) {
     return await this.postsService.editPost(dto, postId, userId);
@@ -183,7 +183,7 @@ export class PostsController {
   @Patch(':postId/r/:replyId')
   async editOpenPostReply(
     @Body() dto: EditReplyDto,
-    @Headers('user-id') userId: string,
+    @Param('userId') userId: string,
     @Param('replyId') replyId: number,
     @Param('postId') postId: number,
   ) {
@@ -193,7 +193,7 @@ export class PostsController {
   @GuardTypes(GuardType.GroupAdminRes, GuardType.OwnRes)
   @Delete('g/:groupId/:postId')
   async deleteGroupPost(
-    @Headers('user-id') userId: string,
+    @Param('userId') userId: string,
     @Param('groupId') groupId: number,
     @Param('postId') postId: number,
   ) {
@@ -203,7 +203,7 @@ export class PostsController {
   @GuardTypes(GuardType.GroupAdminRes, GuardType.OwnRes)
   @Delete('g/:groupId/:postId/r/:replyId')
   async deleteGroupPostReply(
-    @Headers('user-id') userId: string,
+    @Param('userId') userId: string,
     @Param('replyId') replyId: number,
     @Param('groupId') groupId: number,
     @Param('postId') postId: number,
@@ -219,7 +219,7 @@ export class PostsController {
   @GuardTypes(GuardType.OwnRes)
   @Delete(':postId')
   async deleteOpenPost(
-    @Headers('user-id') userId: string,
+    @Param('userId') userId: string,
     @Param('postId') postId: number,
   ) {
     return await this.postsService.deletePost(postId, userId);
@@ -228,7 +228,7 @@ export class PostsController {
   @GuardTypes(GuardType.OwnRes)
   @Delete(':postId/r/:replyId')
   async deleteOpenPostReply(
-    @Headers('user-id') userId: string,
+    @Param('userId') userId: string,
     @Param('replyId') replyId: number,
     @Param('postId') postId: number,
   ) {

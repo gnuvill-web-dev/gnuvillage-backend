@@ -32,8 +32,10 @@ export class AuthGuard implements CanActivate {
     const jwtPayload = this.getJwtPayload(request);
     if (jwtPayload.userId === 'superuser') return true;
 
-    let isValid = false;
     if (guardTypes.length > 0) {
+      //guardTypes에는 우선순위가 있다.
+      guardTypes.sort();
+      let isValid = false;
       //guardTypes 중에 적어도 하나 통과해야 접근이 가능하다.
       for (let i = 0; i < guardTypes.length; i++) {
         //로그인 상태를 요구하는 권한에 접근하는 경우(이미 getJwtPayload 통해 토큰 검증 완료)
@@ -50,24 +52,26 @@ export class AuthGuard implements CanActivate {
             jwtPayload,
             request,
           );
+
+        if (isValid) return true;
       }
     }
-    return isValid;
+    return false;
   }
 
   private async validateOwnResRequest(jwtPayload: any, request: any) {
-    let userId = request.params.userId;
-    //파라미터에 없으면 헤더에서 userId를 찾는다.
-    if (userId === undefined) userId = request.headers['user-id'];
-    if (jwtPayload.userId !== userId) return false;
-    return true;
+    if (request.params.userId === undefined) {
+      request.params.userId = jwtPayload.userId;
+      return true;
+    } else {
+      if (jwtPayload.userId !== request.params.userId) return false;
+      else return true;
+    }
   }
 
   private async validateGroupResRequest(jwtPayload: any, request: any) {
     const userId = jwtPayload.userId;
     let groupId = request.params.groupId;
-    //파라미터에 없으면 헤더에서 groupId를 찾는다.
-    if (groupId === undefined) groupId = request.headers['group-id'];
 
     const assignment =
       await this.groupsService.assignedGroupsRepository.findOneBy({
@@ -75,30 +79,27 @@ export class AuthGuard implements CanActivate {
         groupId,
       });
     if (assignment === undefined) return false;
-    return true;
+    else return true;
   }
 
   private async validateGroupAdminResRequest(jwtPayload: any, request: any) {
     const userId = jwtPayload.userId;
     let groupId = request.params.groupId;
-    //파라미터에 없으면 헤더에서 groupId를 찾는다.
-    if (groupId === undefined) groupId = request.headers['group-id'];
+
     const assignment =
       await this.groupsService.assignedGroupsRepository.findOneBy({
         userId,
         groupId,
       });
     if (assignment === undefined || assignment.admin === false) return false;
-    return true;
+    else return true;
   }
 
   private getJwtPayload(request: any) {
     try {
       const jwtString = request.headers.authorization.split('Bearer ')[1];
       const payload = jwt.verify(jwtString, process.env.AUTH_JWT_KEY);
-      if (payload.userId === 'superuser')
-        request.headers['user-id'] = undefined;
-      else request.headers['user-id'] = payload.userId;
+      request.headers['auth-id'] = payload.userId;
       return payload;
     } catch (e) {
       throw new UnauthorizedException();
