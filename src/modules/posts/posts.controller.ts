@@ -32,6 +32,15 @@ export class PostsController {
     return await this.postsService.createPost(dto, authId);
   }
 
+  @Post('a')
+  @GuardTypes(GuardType.SuperUser)
+  async createOpenAdminPost(
+    @Body() dto: CreatePostDto,
+    @Headers('auth-id') authId: string,
+  ) {
+    return await this.postsService.createPost(dto, authId, undefined, true);
+  }
+
   @Post('g/:groupId')
   @GuardTypes(GuardType.GroupRes)
   async createGroupPost(
@@ -169,7 +178,7 @@ export class PostsController {
     );
   }
 
-  @GuardTypes(GuardType.GroupAdminRes, GuardType.OwnRes)
+  @GuardTypes(GuardType.OwnRes)
   @Patch(':postId')
   async editOpenPost(
     @Body() dto: EditPostDto,
@@ -179,7 +188,7 @@ export class PostsController {
     return await this.postsService.editPost(dto, postId, userId);
   }
 
-  @GuardTypes(GuardType.GroupAdminRes, GuardType.OwnRes)
+  @GuardTypes(GuardType.OwnRes)
   @Patch(':postId/r/:replyId')
   async editOpenPostReply(
     @Body() dto: EditReplyDto,

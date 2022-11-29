@@ -35,6 +35,14 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.enableCors({
+    "origin": process.env.CORS_ORIGIN,
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  })
+
   await app.listen(3000);
 }
 bootstrap();

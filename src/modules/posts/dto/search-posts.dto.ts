@@ -4,6 +4,7 @@ import {
   MaxLength,
   IsDate,
   Matches,
+  IsBoolean,
 } from 'class-validator';
 import { PageRequest } from 'src/common/utils/page-request';
 
@@ -35,4 +36,8 @@ export class SearchPostsDto extends PageRequest {
   @MaxLength(20)
   @IsOptional()
   readonly category: string;
+
+  @IsBoolean()
+  @IsOptional()
+  readonly admin: boolean;
 }
