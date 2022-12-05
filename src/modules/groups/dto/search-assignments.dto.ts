@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString, Matches } from 'class-validator';
 import { PageRequest } from 'src/common/utils/page-request';
 
@@ -11,6 +12,7 @@ export class SearchAssignmentsDto extends PageRequest {
   @IsOptional()
   readonly groupId: string;
 
+  @Transform(({ value }) => value === '1' || value === 'true'|| value === true)
   @IsBoolean()
   @IsOptional()
   readonly admin: boolean;

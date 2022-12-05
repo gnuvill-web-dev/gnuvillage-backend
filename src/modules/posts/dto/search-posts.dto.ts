@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsOptional,
   IsString,
@@ -37,6 +38,7 @@ export class SearchPostsDto extends PageRequest {
   @IsOptional()
   readonly category: string;
 
+  @Transform(({ value }) => value === '1' || value === 'true'|| value === true)
   @IsBoolean()
   @IsOptional()
   readonly admin: boolean;
