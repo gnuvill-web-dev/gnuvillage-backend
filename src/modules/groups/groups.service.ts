@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { EditAssignmentDto } from './dto/edit-assignment.dto';
@@ -85,15 +85,23 @@ export class GroupsService {
   }
 
   async getGroup(groupId: number) {
-    return await this.groupsRepository.findOneBy({
+    const group = await this.groupsRepository.findOneBy({
       id: groupId,
     });
+
+    if(group === null)
+        throw new NotFoundException;
+    return group;
   }
 
   async getAssignment(groupId: number) {
-    return await this.assignedGroupsRepository.findOneBy({
+    const assignment = await this.assignedGroupsRepository.findOneBy({
       groupId,
     });
+
+    if(assignment === null)
+        throw new NotFoundException;
+    return assignment;
   }
 
   async editGroup(groupId: number, dto: EditGroupDto) {
