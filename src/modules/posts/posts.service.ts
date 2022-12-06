@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Repository, DataSource, Like, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -131,6 +131,9 @@ export class PostsService {
         groupId,
       });
     }
+    
+    if(post === null)
+        throw new NotFoundException;
     return post;
   }
 
@@ -149,6 +152,9 @@ export class PostsService {
         groupId,
       });
     }
+    
+    if(reply === null)
+        throw new NotFoundException;
     return reply;
   }
 
