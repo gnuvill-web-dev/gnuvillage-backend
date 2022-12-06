@@ -80,6 +80,7 @@ export class PostsService {
     const list = await this.postsRepository.find({
       take: take,
       skip: skip,
+      order: {id:"DESC"},
       where: { ...query },
     });
 
