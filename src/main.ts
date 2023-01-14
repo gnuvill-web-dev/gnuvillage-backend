@@ -39,9 +39,11 @@ async function bootstrap() {
   app.enableCors({
     "origin": process.env.CORS_ORIGIN,
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "allowedHeaders": "*",
     "preflightContinue": false,
+    "maxAge": 86400,
     "optionsSuccessStatus": 204
-  })
+  });
 
   await app.listen(3000);
 }

@@ -30,7 +30,6 @@ export class UsersController {
     return this.usersService.createUser(dto);
   }
 
-  @GuardTypes(GuardType.MemberRes)
   @Get('p/:userId')
   async getUserProfile(
     @Param('userId') userId: string,
@@ -38,7 +37,6 @@ export class UsersController {
     return this.usersService.getUserProfile(userId);
   }
 
-  @GuardTypes(GuardType.MemberRes)
   @Get('p')
   async getAllUserProfiles(
     @Query() dto: SearchProfilesDto,
